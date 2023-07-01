@@ -46,7 +46,7 @@ def send_message(chat_id, text):
     requests.post(url, json=params)
 
 # Example usage
-recipe_dataset_file = '/IndianFoodDatasetCSV.csv'
+recipe_dataset_file = 'IndianFoodDatasetCSV.csv'
 
 def handle_updates(updates):
     for update in updates:
