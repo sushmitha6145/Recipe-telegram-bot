@@ -55,7 +55,13 @@ def handle_updates(updates):
             text = message.get('text')
             chat_id = message['chat']['id']
             if text:
-                extract_recipe_info(recipe_dataset_file, text, chat_id)
+                # Check if the user has already provided a recipe name
+                if 'recipe_name' not in message['chat']:
+                    send_message(chat_id, "What recipe would you like?")
+                    # Store the recipe name in the chat context
+                    message['chat']['recipe_name'] = text
+                else:
+                    extract_recipe_info(recipe_dataset_file, message['chat']['recipe_name'], chat_id)
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
 offset = None
