@@ -64,7 +64,7 @@ def handle_updates(updates):
                 send_message(chat_id, "Please enter the recipe name.")
 
 # Example usage
-recipe_dataset_file = ''
+recipe_dataset_file = 'IndianFoodDatasetCSV.csv'
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
 offset = None
