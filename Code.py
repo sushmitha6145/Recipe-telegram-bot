@@ -33,9 +33,10 @@ def extract_recipe_info(csv_file, recipe_name, chat_id):
 
                 # Send the response message to the specified chat_id
                 send_message(chat_id, response)
-                return
+                return True
 
     send_message(chat_id, f"Recipe '{recipe_name}' not found in the dataset.")
+    return False
 
 def send_message(chat_id, text):
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
@@ -59,7 +60,9 @@ def handle_updates(updates):
                     send_message(chat_id, welcome_message)
                 else:
                     # Extract and display the recipe information
-                    extract_recipe_info(recipe_dataset_file, text, chat_id)
+                    recipe_sent = extract_recipe_info(recipe_dataset_file, text, chat_id)
+                    if not recipe_sent:
+                        send_message(chat_id, "Please enter a valid recipe name.")
             else:
                 send_message(chat_id, "Please enter the recipe name.")
 
