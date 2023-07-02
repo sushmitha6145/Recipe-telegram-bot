@@ -45,23 +45,19 @@ def send_message(chat_id, text):
     }
     requests.post(url, json=params)
 
-# Example usage
-recipe_dataset_file = 'IndianFoodDatasetCSV.csv'
-
 def handle_updates(updates):
     for update in updates:
         if 'message' in update:
             message = update['message']
-            text = message.get('text')
             chat_id = message['chat']['id']
-            if text:
-                # Check if the user has already provided a recipe name
-                if 'recipe_name' not in message['chat']:
-                    send_message(chat_id, "What recipe would you like?")
-                    # Store the recipe name in the chat context
-                    message['chat']['recipe_name'] = text
-                else:
-                    extract_recipe_info(recipe_dataset_file, message['chat']['recipe_name'], chat_id)
+            if 'text' in message:
+                text = message['text']
+                extract_recipe_info(recipe_dataset_file, text, chat_id)
+            else:
+                send_message(chat_id, "Please enter the recipe name.")
+
+# Example usage
+recipe_dataset_file = '/IndianFoodDatasetCSV.csv'
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
 offset = None
