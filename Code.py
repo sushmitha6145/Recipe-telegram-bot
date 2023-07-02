@@ -8,20 +8,15 @@ bot_token = '6367686078:AAFlTgxSDN2j2AW83f9Smlz_FZBaMTgZ2GE'
 def extract_recipe_info(csv_file, recipe_name, chat_id):
     with open(csv_file, 'r', encoding='utf-8') as file:
         reader = csv.DictReader(file)
-        found_recipes = []
         for row in reader:
-            if row['RecipeName'].lower() == recipe_name.lower():
-                found_recipes.append(row)
-
-        if found_recipes:
-            for recipe in found_recipes:
-                response = f"Recipe: {recipe['RecipeName']}\n\nIngredients:\n"
-                ingredients = recipe['Ingredients'].split(',')
+            if row['RecipeName'] == recipe_name:
+                response = f"Recipe: {row['RecipeName']}\n\nIngredients:\n"
+                ingredients = row['Ingredients'].split(',')
                 for ingredient in ingredients:
                     response += f"- {ingredient.strip()}\n"
 
                 response += "\nProcess:\n"
-                process = recipe['Instructions']
+                process = row['Instructions']
                 steps = []
                 current_step = ""
                 for char in process:
@@ -38,8 +33,9 @@ def extract_recipe_info(csv_file, recipe_name, chat_id):
 
                 # Send the response message to the specified chat_id
                 send_message(chat_id, response)
-        else:
-            send_message(chat_id, f"No recipes found for '{recipe_name}' in the dataset.")
+                return
+
+    send_message(chat_id, f"Recipe '{recipe_name}' not found in the dataset.")
 
 def send_message(chat_id, text):
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
@@ -68,7 +64,7 @@ def handle_updates(updates):
                 send_message(chat_id, "Please enter the recipe name.")
 
 # Example usage
-recipe_dataset_file ='IndianFoodDatasetCSV.csv'
+recipe_dataset_file = ''
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
 offset = None
