@@ -81,7 +81,7 @@ def get_some_recipes(csv_file, num_recipes):
     return unique_recipes
 
 # Example usage
-recipe_dataset_file = 'IndianFoodDatasetCSV.csv'
+recipe_dataset_file = '/IndianFoodDatasetCSV.csv'
 
 offset = None
 
