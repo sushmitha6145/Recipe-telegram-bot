@@ -1,7 +1,7 @@
 import csv
 import requests
+import json
 import random
-import streamlit as st
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
 bot_token = '6367686078:AAFlTgxSDN2j2AW83f9Smlz_FZBaMTgZ2GE'
@@ -59,20 +59,18 @@ def get_some_recipes(csv_file, num_recipes):
 recipe_dataset_file = 'IndianFoodDatasetCSV.csv'
 
 def main():
-    st.title("Recipe Chatbot")
+    print("Welcome! I'm a chatbot capable of providing recipes.")
+    print("Enter the dish name in this format: '<dishname> Recipe'")
 
-    st.markdown("Welcome! I'm a chatbot capable of providing recipes.")
-
-    user_input = st.text_input("Enter the dish name in this format: '<dishname> Recipe'")
-
-    if user_input:
+    while True:
+        user_input = input("User: ")
         if user_input == '/some_recipes':
             # Display a unique set of 25 recipes from the dataset
             recipe_list = get_some_recipes(recipe_dataset_file, 25)
             recipe_list_message = "Here are 25 unique recipes from the dataset:\n\n"
             for i, recipe in enumerate(recipe_list, start=1):
                 recipe_list_message += f"{i}. {recipe}\n"
-            st.markdown(recipe_list_message)
+            print(recipe_list_message)
         else:
             # Extract and display the recipe information
             extract_recipe_info(recipe_dataset_file, user_input, 1)
