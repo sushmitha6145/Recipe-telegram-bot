@@ -58,22 +58,18 @@ def get_some_recipes(csv_file, num_recipes):
 # Example usage
 recipe_dataset_file = 'IndianFoodDatasetCSV.csv'
 
-def main():
-    print("Welcome! I'm a chatbot capable of providing recipes.")
-    print("Enter the dish name in this format: '<dishname> Recipe'")
+print("Welcome! I'm a chatbot capable of providing recipes.")
+print("Enter the dish name in this format: '<dishname> Recipe'")
 
-    while True:
-        user_input = input("User: ")
-        if user_input == '/some_recipes':
-            # Display a unique set of 25 recipes from the dataset
-            recipe_list = get_some_recipes(recipe_dataset_file, 25)
-            recipe_list_message = "Here are 25 unique recipes from the dataset:\n\n"
-            for i, recipe in enumerate(recipe_list, start=1):
-                recipe_list_message += f"{i}. {recipe}\n"
-            print(recipe_list_message)
-        else:
-            # Extract and display the recipe information
-            extract_recipe_info(recipe_dataset_file, user_input, 1)
-
-if __name__ == "__main__":
-    main()
+while True:
+    user_input = input("User: ")
+    if user_input == '/some_recipes':
+        # Display a unique set of 25 recipes from the dataset
+        recipe_list = get_some_recipes(recipe_dataset_file, 25)
+        recipe_list_message = "Here are 25 unique recipes from the dataset:\n\n"
+        for i, recipe in enumerate(recipe_list, start=1):
+            recipe_list_message += f"{i}. {recipe}\n"
+        print(recipe_list_message)
+    else:
+        # Extract and display the recipe information
+        extract_recipe_info(recipe_dataset_file, user_input, 1)
