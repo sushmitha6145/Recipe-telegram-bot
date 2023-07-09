@@ -56,7 +56,7 @@ def handle_updates(updates):
                 # Check if the user entered the /start command
                 if text == '/start':
                     welcome_message = "Welcome! I'm a chatbot capable of giving recipes.\n"\
-                                      "\nPlease enter the dish name in this format: '<dishname> Recipe'\n\nEnter /some_recipes to get 25 random recipes for every click"
+                                      "\nPlease enter the dish name in this format: '<dishname> Recipe'"
                     send_message(chat_id, welcome_message)
                 elif text == '/some_recipes':
                     # Display a unique set of 25 recipes from the dataset
