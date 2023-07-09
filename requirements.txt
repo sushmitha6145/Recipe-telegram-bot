@@ -1,2 +1,3 @@
 requests
 transformers
+GPT2LMHeadModel
