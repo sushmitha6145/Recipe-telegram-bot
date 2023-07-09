@@ -32,7 +32,6 @@ def extract_recipe_info(csv_file, recipe_name, chat_id):
                 for step, instruction in enumerate(steps, start=1):
                     response += f"{step}. {instruction.strip()}\n"
 
-                # Send the response message to the specified chat_id
                 send_message(chat_id, response)
                 return
 
@@ -46,30 +45,27 @@ def send_message(chat_id, text):
     }
     requests.post(url, json=params)
 
+def handle_message(message):
+    chat_id = message['chat']['id']
+    text = message['text']
+
+    if text == '/start':
+        welcome_message = "Welcome! I'm a chatbot capable of providing recipes.\n"\
+                          "\nPlease enter the dish name in this format: '<dishname> Recipe'\n\nEnter /some_recipes to get 25 random recipes for every click"
+        send_message(chat_id, welcome_message)
+    elif text == '/some_recipes':
+        recipe_list = get_some_recipes(recipe_dataset_file, 25)
+        recipe_list_message = "Here are 25 unique recipes from the dataset:\n\n"
+        for i, recipe in enumerate(recipe_list, start=1):
+            recipe_list_message += f"{i}. {recipe}\n"
+        send_message(chat_id, recipe_list_message)
+    else:
+        extract_recipe_info(recipe_dataset_file, text, chat_id)
+
 def handle_updates(updates):
     for update in updates:
         if 'message' in update:
-            message = update['message']
-            chat_id = message['chat']['id']
-            if 'text' in message:
-                text = message['text']
-                # Check if the user entered the /start command
-                if text == '/start':
-                    welcome_message = "Welcome! I'm a chatbot capable of giving recipes.\n"\
-                                      "\nPlease enter the dish name in this format: '<dishname> Recipe'\n\nEnter /some_recipes to get 25 random recipes for every click"
-                    send_message(chat_id, welcome_message)
-                elif text == '/some_recipes':
-                    # Display a unique set of 25 recipes from the dataset
-                    recipe_list = get_some_recipes(recipe_dataset_file, 25)
-                    recipe_list_message = "Here are 25 unique recipes from the dataset:\n\n"
-                    for i, recipe in enumerate(recipe_list, start=1):
-                        recipe_list_message += f"{i}. {recipe}\n"
-                    send_message(chat_id, recipe_list_message)
-                else:
-                    # Extract and display the recipe information
-                    extract_recipe_info(recipe_dataset_file, text, chat_id)
-            else:
-                send_message(chat_id, "Please enter the recipe name.")
+            handle_message(update['message'])
 
 def get_some_recipes(csv_file, num_recipes):
     recipes = []
@@ -96,4 +92,4 @@ while True:
             offset = updates[-1]['update_id'] + 1
             handle_updates(updates)
     else:
-        print('Error occurred while retrieving updates.')
+        print('Error occurred while retrieving updates from the Telegram API.')
