@@ -1,6 +1,6 @@
 import csv
 import requests
-import json
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import random
 
 # Replace 'YOUR_BOT_TOKEN' with your actual bot token
@@ -17,20 +17,11 @@ def extract_recipe_info(csv_file, recipe_name, chat_id):
                     response += f"- {ingredient.strip()}\n"
 
                 response += "\nProcess:\n"
-                process = row['Instructions']
-                steps = []
-                current_step = ""
-                for char in process:
-                    current_step += char
-                    if char == '.':
-                        if current_step[-2:].isdigit():
-                            continue
-                        else:
-                            steps.append(current_step.strip())
-                            current_step = ""
-
-                for step, instruction in enumerate(steps, start=1):
-                    response += f"{step}. {instruction.strip()}\n"
+                input_text = row['Instructions']
+                encoded_input = tokenizer.encode(input_text, return_tensors='pt')
+                output = model.generate(encoded_input, max_length=100, num_return_sequences=1, temperature=0.7)
+                generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
+                response += generated_text
 
                 send_message(chat_id, response)
                 return
@@ -77,9 +68,14 @@ def get_some_recipes(csv_file, num_recipes):
     return unique_recipes
 
 # Example usage
-recipe_dataset_file = 'IndianFoodDatasetCSV.csv'
+recipe_dataset_file = '/IndianFoodDatasetCSV.csv'
 
 offset = None
+
+# Load the pre-trained GPT-2 model and tokenizer
+model_name = 'gpt2'
+model = GPT2LMHeadModel.from_pretrained(model_name)
+tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 
 while True:
     url = f"https://api.telegram.org/bot{bot_token}/getUpdates"
